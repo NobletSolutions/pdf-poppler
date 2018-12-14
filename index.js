@@ -1,15 +1,10 @@
 const os = require('os');
 const path = require('path');
 const {spawn} = require('child_process');
+const fs = require('fs');
 
 let platform = os.platform();
-if (!['darwin', 'win32'].includes(platform)) {
-    console.error(`${platform} is NOT supported.`);
-    process.exit(1);
-}
-
-let popplerPath;
-
+let popplerPath = '/usr/bin';
 let execOptions = {
     encoding: 'utf8',
     maxBuffer: 5000*1024,
@@ -64,8 +59,8 @@ else if (platform === 'darwin') {
     spawn('install_name_tool', ['-change', `/usr/local/Cellar/poppler/0.66.0/lib/libpoppler.77.dylib`, `${path.join(dyldPath, 'libpoppler.77.0.0.dylib')}`, `${path.join(popplerPath, 'pdftocairo')}`]);
     spawn('install_name_tool', ['-change', `/usr/local/Cellar/poppler/0.66.0/lib/libpoppler.77.dylib`, `${path.join(dyldPath, 'libpoppler.77.0.0.dylib')}`, `${path.join(popplerPath, 'pdfimages')}`]);
 }
-else {
-    console.error(`${platform} is NOT supported.`);
+else if (!fs.statSync(path.join(popplerPath, 'pdfinfo')).isFile()) {
+    console.error(`${platform} is NOT supported`);
     process.exit(1);
 }
 
@@ -74,3 +69,4 @@ module.exports.exec_options = execOptions;
 module.exports.info = require('./lib/info');
 module.exports.imgdata = require('./lib/imgdata');
 module.exports.convert = require('./lib/convert');
+
