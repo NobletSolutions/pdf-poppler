@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kb47/pdf-poppler.git"
+    "url": "https://github.com/kb47/pdf-poppler.git"
   },
   "keywords": [
     "pdf",
